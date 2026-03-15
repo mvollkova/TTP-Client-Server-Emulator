@@ -20,3 +20,5 @@ This repository contains a basic implementation of a secure communication system
 - **Library:** `cryptography`
 - **Encryption:** RSA 4096 bits
 - **Certificate Format:** X.509
+
+Note: Certificates are generated locally upon running the scripts and are excluded from the repository for security reasons.
