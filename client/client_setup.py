@@ -3,6 +3,9 @@ from cryptography.hazmat.primitives import serialization, hashes
 from cryptography import x509
 from cryptography.x509.oid import NameOID
 import datetime
+import socket
+
+
 client_key = rsa.generate_private_key(
     public_exponent=65537,
     key_size=4096,
@@ -45,3 +48,24 @@ with open("client_certificate.crt", "wb") as f:
     f.write(client_cert.public_bytes(serialization.Encoding.PEM))
 
 print("Certificate for CLIENT created and signed by TTP")
+
+
+def run_basic_client():
+    print("\n--- Starting Base Client ---")
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        client_socket.connect(('localhost', 12345))
+        print("Connected to Server!")
+        
+        message = "Client ID: 196660. Requesting secure session."
+        client_socket.sendall(message.encode())
+        
+        response = client_socket.recv(1024).decode()
+        print(f"Log: Server responded: '{response}'")
+    except ConnectionRefusedError:
+        print("Error: Server is not running!")
+    finally:
+        client_socket.close()
+
+if __name__ == "__main__":
+    run_basic_client()

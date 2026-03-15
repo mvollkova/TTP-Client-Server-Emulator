@@ -3,6 +3,7 @@ from cryptography.hazmat.primitives import serialization, hashes
 from cryptography import x509
 from cryptography.x509.oid import NameOID
 import datetime
+import socket
 
 server_key = rsa.generate_private_key(
     public_exponent=65537,
@@ -40,8 +41,27 @@ server_cert = x509.CertificateBuilder().subject_name(
     datetime.datetime.now(datetime.UTC) + datetime.timedelta(days=30)
 ).sign(ttp_private_key, hashes.SHA256()) # sign TTP
 
-# 5. Сохраняем готовый паспорт сервера
 with open("server_certificate.crt", "wb") as f:
     f.write(server_cert.public_bytes(serialization.Encoding.PEM))
 
 print("Certificate for SERVER created and signed by TTP")
+
+def run_basic_server():
+    print("\n--- Starting Base Server for Communication ---")
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('localhost', 12345))
+    server_socket.listen(1)
+    print("Server is listening on port 12345...")
+    
+    conn, addr = server_socket.accept()
+    print(f"Connection established with: {addr}")
+    
+    data = conn.recv(1024).decode()
+    print(f"Log: Received message: '{data}'")
+    
+    conn.sendall("Hello Client! Connection is active.".encode())
+    conn.close()
+    print("Communication finished. Server closed.")
+
+if __name__ == "__main__":
+    run_basic_server()
