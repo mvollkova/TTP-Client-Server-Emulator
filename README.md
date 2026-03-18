@@ -18,7 +18,7 @@ This repository contains a basic implementation of a secure communication system
 3. Navigate to the `client` folder and run `python client_setup.py` to get the Client certificate.
 
 ## Technologies Used
-- **Language:** Python 3.x
+- **Language:** Python
 - **Library:** `cryptography`
 - **Encryption:** RSA 4096 bits
 - **Certificate Format:** X.509
